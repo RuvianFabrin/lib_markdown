@@ -1,5 +1,15 @@
 const chalk = require('chalk');
 const fs = require('fs');
+function extraiLinks(texto) {
+    const regex = /\[([^\]]*)\]\((https?:\/\/[^$#\s].[^\s]*)\)/gm;
+    const arrayResultados = [];
+    let temp;
+    while ((temp = regex.exec(texto)) !== null) {
+        arrayResultados.push({ [temp[1]]: temp[2] });    
+        
+    }
+    return arrayResultados;
+}
 
 function trataErro(erro) {
     throw new Error(chalk.red(erro.code, 'Não há arquivo no caminho informado'));
@@ -9,12 +19,14 @@ async function pegaArquivo(caminho) {
     const encoding = 'utf8';
     try {
         const texto = await fs.readFileSync(caminho, encoding);
-        console.log(chalk.green(texto));
+        console.log(extraiLinks(texto));
+        
     } catch (erro) {
         trataErro(erro);
     }
     
 }
+//regex101.com
 /*
 function pegaArquivo(caminho) {
     const encoding = 'utf8';
